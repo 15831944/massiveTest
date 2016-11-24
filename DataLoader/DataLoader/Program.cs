@@ -10,7 +10,7 @@ namespace DataLoader
     class Program
     {
         private static string _path = "..\\..\\..\\..\\InputData";
-        private static int maxBatchSize = 3;
+        private static int maxBatchSize = 9;
 
         /// <summary>
         /// Main

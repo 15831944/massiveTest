@@ -2,6 +2,9 @@
 
 namespace Client
 {
+    /// <summary>
+    /// Default values/cons
+    /// </summary>
     class Definitions
     {
         public static SolidColorBrush SelectionColor = Brushes.Red;

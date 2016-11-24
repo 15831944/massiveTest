@@ -1,25 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 using Client.Entities;
-using Client.Utilities;
 
 namespace Client.Layouts
 {
+
+    /// <summary>
+    /// Layout algorythm class with different layout algorythms 
+    /// </summary>
     public class LayoutAlgorythms
     {
-        public Dictionary<int, NodeWithVisuals> CreateGridlikeLayout(List<NodeWithVisuals> nodes, Canvas mainCanvas, List<NodeWithVisuals> nodesSelected)
+
+        /// <summary>
+        /// Grid like lyout with spread of nodes
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="mainCanvas"></param>
+        /// <returns></returns>
+        public Dictionary<int, NodeWithVisuals> CreateGridlikeLayout(List<NodeWithVisuals> nodes, Canvas mainCanvas)
         {
-            var visualsFactory = new VisualsFactory();
             var nodesWithVisuals = new Dictionary<int, NodeWithVisuals>();
-            var orderedNodes = nodes.OrderBy(o => o.adjacentNodes.Length).ToList();
+            var orderedNodes = nodes.OrderByDescending(o => o.adjacentNodes.Length).ToList(); //NOTE determines if "heavier" in the middle or on sides
 
             int stepSize = Definitions.Size + Definitions.HalfSize;
 
             int pointsToDeployPerCycle = 8;
+
             int cycleCounter = 0;
             int howManyCompleteCycles = 0;
+
             int pointsToDeployCounter = 1;
             double zerox = mainCanvas.ActualWidth / 2;
             double zeroy = mainCanvas.ActualHeight / 2;
@@ -65,45 +75,12 @@ namespace Client.Layouts
                 {
                     y = y + stepSize;
                 }
-
-                var nodeVisual = visualsFactory.CreateNode(x, y, mainCanvas, orderedNode, new NodesEventHandler(nodesSelected, nodesWithVisuals).NodeSelected);
-                orderedNode.VisualRepresentation = nodeVisual;
                 orderedNode.X = x;
                 orderedNode.Y = y;
                 nodesWithVisuals.Add(orderedNode.id, orderedNode);
                 cycleCounter++;
             }
             return nodesWithVisuals;
-        }
-        
-        public void CreateConnectingLines(Dictionary<int, NodeWithVisuals> nodesWithVisuals, Canvas mainCanvas)
-        {
-            int size = Definitions.Size;
-            int halfSize = Definitions.HalfSize;
-            var visualsFactory = new VisualsFactory();
-            foreach (var nodeWithVisual in nodesWithVisuals)
-            {
-                var lines = new List<Line>();
-
-                foreach (var adjacentNode in nodeWithVisual.Value.adjacentNodes)
-                {
-                    var adjecetNodeVisual = nodesWithVisuals.First(node => node.Key == adjacentNode);
-                    if (nodeWithVisual.Key == adjecetNodeVisual.Key)
-                    {
-                        var lineVisualPartOne = visualsFactory.CreateLine(nodeWithVisual.Value.X + size - size / 10, nodeWithVisual.Value.Y + halfSize, adjecetNodeVisual.Value.X + size + size / 5, adjecetNodeVisual.Value.Y + size, mainCanvas);
-                        lines.Add(lineVisualPartOne);
-
-                        var lineVisualPArtTwo = visualsFactory.CreateLine(nodeWithVisual.Value.X + halfSize, nodeWithVisual.Value.Y + size - size / 10, adjecetNodeVisual.Value.X + size + size / 5, adjecetNodeVisual.Value.Y + size, mainCanvas);
-                        lines.Add(lineVisualPArtTwo);
-                    }
-                    else
-                    {
-                        var lineVisual = visualsFactory.CreateLine(nodeWithVisual.Value.X + halfSize, nodeWithVisual.Value.Y + halfSize, adjecetNodeVisual.Value.X + halfSize, adjecetNodeVisual.Value.Y + halfSize, mainCanvas);
-                        lines.Add(lineVisual);
-                    }
-                }
-                nodeWithVisual.Value.Lines = lines;
-            }
         }
     }
 }

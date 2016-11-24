@@ -23,18 +23,18 @@ namespace Client
         {
             InitializeComponent();
             _mainCanvas = CreateDefaultCanvas();
-            var scrollViewerCanvas = new ScrollViewer
+            var scrollViewerCanvas = new ScrollViewer 
             {
                 Content = _mainCanvas,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Auto
-            };
+            }; //TODO fix not showing
             Content = scrollViewerCanvas;
         }
 
         private Canvas CreateDefaultCanvas()
         {
-            Canvas defaultCanvas = new Canvas { };
+            Canvas defaultCanvas = new Canvas();
             CreateButtons(defaultCanvas);
             return defaultCanvas;
         }
@@ -42,8 +42,8 @@ namespace Client
         private void CreateButtons(Canvas defaultCanvas)
         {
             var visualsFactory = new VisualsFactory();
-            Button buttonLoad = visualsFactory.CreateButton(Definitions.LoadButtonName, Definitions.LoadButtonLabel, loadButton_Click, new Thickness(365, 360, 0, 0));
-            Button buttonPath = visualsFactory.CreateButton(Definitions.CalculateShortestPathButtonName, Definitions.CalculateShortestPathButtonLabel, pathButton_Click, new Thickness(439, 360, 0, 0));
+            Button buttonLoad = visualsFactory.CreateButton(Definitions.LoadButtonName, Definitions.LoadButtonLabel, loadButton_Click, new Thickness(5, 5, 0, 0));
+            Button buttonPath = visualsFactory.CreateButton(Definitions.CalculateShortestPathButtonName, Definitions.CalculateShortestPathButtonLabel, pathButton_Click, new Thickness(80, 5, 0, 0));
             defaultCanvas.Children.Add(buttonLoad);
             defaultCanvas.Children.Add(buttonPath);
         }
@@ -52,9 +52,10 @@ namespace Client
         {
             RestartCanvas(_mainCanvas);
             List<NodeWithVisuals> nodes = new ServiceAccessLayer().GetNodes();
-            var layoutAlgorythms = new LayoutAlgorythms();
-            _nodesWithVisuals = layoutAlgorythms.CreateGridlikeLayout(nodes, _mainCanvas, _nodesSelected);
-            layoutAlgorythms.CreateConnectingLines(_nodesWithVisuals, _mainCanvas);
+            var layoutAlgorythm = new LayoutAlgorythms();
+            _nodesWithVisuals = layoutAlgorythm.CreateGridlikeLayout(nodes, _mainCanvas);
+            new NodesEventHandler(_nodesSelected, _nodesWithVisuals).CreateEventHandlers(_mainCanvas);
+            new NodesVisualHelper().CreateConnectingLines(_nodesWithVisuals, _mainCanvas);
         }
 
         private void pathButton_Click(object sender, RoutedEventArgs e)

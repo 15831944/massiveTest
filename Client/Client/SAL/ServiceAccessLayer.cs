@@ -6,8 +6,18 @@ using Shared;
 
 namespace Client.SAL
 {
+
+    /// <summary>
+    /// Layer to access Server
+    /// </summary>
     class ServiceAccessLayer
     {
+        /// <summary>
+        /// Get a shortest path between start nad last node
+        /// </summary>
+        /// <param name="startNodeWithVisualsId">Start node to search from</param>
+        /// <param name="lastNodeWithVisualsId">Final node for path</param>
+        /// <returns>Array of nodes on shorthest path</returns>
         public Node[] GetShortestPathList(byte startNodeWithVisualsId, byte lastNodeWithVisualsId)
         {
             var client = new DomainSpecificServiceClient();
@@ -15,6 +25,10 @@ namespace Client.SAL
             return path;
         }
 
+        /// <summary>
+        /// Get nodes from database
+        /// </summary>
+        /// <returns>List of nodes from database</returns>
         public List<NodeWithVisuals> GetNodes()
         {
             //List<NodeWithVisuals> nodes = Test.GetTestData();

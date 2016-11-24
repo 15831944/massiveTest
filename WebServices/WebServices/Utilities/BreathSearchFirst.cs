@@ -19,15 +19,16 @@ namespace WebServices.Utilities
             while (queue.Any())
             {
                 var currentNode = queue.Dequeue();
-                if (lastNode.id == currentNode.id)
-                {
-                    CreatePath(currentNode, resultNodes); //TODO refactor
-                    break;
-                }
 
                 foreach (var adjacentNode in currentNode.adjacentNodes)
                 {
                     var nextNode = nodes.First(node => node.id == adjacentNode);
+                    if (lastNode.id == nextNode.id)
+                    {
+                        nextNode.PreviousNode = currentNode;
+                        CreatePath(nextNode, resultNodes);
+                        return resultNodes;
+                    }
                     if (nextNode?.Cost == -1)
                     {
                         nextNode.Cost = currentNode.Cost + 1;

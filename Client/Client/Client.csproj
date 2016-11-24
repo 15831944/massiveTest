@@ -63,6 +63,8 @@
     <Compile Include="SAL\ServiceAccessLayer.cs" />
     <Compile Include="Layouts\LayoutAlgorythms.cs" />
     <Compile Include="Definitions.cs" />
+    <Compile Include="Utilities\INodesEventHandler.cs" />
+    <Compile Include="Utilities\IVisualsFactory.cs" />
     <Compile Include="Utilities\NodesEventHandler.cs" />
     <Compile Include="Utilities\NodesVisualHelper.cs" />
     <Compile Include="Service References\DomainSpecificServiceReference\Reference.cs">

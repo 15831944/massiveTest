@@ -5,6 +5,9 @@ using Shared;
 
 namespace Client.Entities
 {
+    /// <summary>
+    /// Wrapper around node, with additional properties for easier manipulation
+    /// </summary>
     public class NodeWithVisuals : Node
     {
         public NodeWithVisuals PreviousNodeWithVisuals;
@@ -19,7 +22,9 @@ namespace Client.Entities
             adjacentNodes = node.adjacentNodes;
         }
 
-        internal NodeWithVisuals()
+
+        //TODO create internal and add internat visibility to tests
+        public NodeWithVisuals()
         {
            
         }

@@ -5,7 +5,10 @@ using Client.Entities;
 
 namespace Client.Utilities
 {
-    internal class NodesEventHandler    
+    /// <summary>
+    /// Event Handler Helper for node selection / deselection
+    /// </summary>
+    public class NodesEventHandler : INodesEventHandler
     {
         private readonly List<NodeWithVisuals> _nodesSelected;
         private readonly Dictionary<int, NodeWithVisuals> _nodesWithVisuals;
@@ -18,26 +21,30 @@ namespace Client.Utilities
 
         public void NodeSelected(object sender, RoutedEventArgs e)
         {
-            Border border = sender as Border;
+            var nodesVisualHelper =  new NodesVisualHelper();
+            var border = sender as Border;
             if (border != null)
             {
                 var borderId = border.Tag is byte ? (byte)border.Tag : 0;
 
                 if (_nodesSelected.Count >= 2)
                 {
-                    new NodesVisualHelper().ClearNodeSelected(_nodesSelected);
+                    nodesVisualHelper.ClearNodeSelected(_nodesSelected);
                 }
 
                 border.BorderBrush = Definitions.SelectionColor;
                 _nodesSelected.Add(_nodesWithVisuals[borderId]);
-                foreach (var node in _nodesSelected)
-                {
-                    foreach (var line in node.Lines)
-                    {
-                        line.Stroke = Definitions.SelectionColor;
-                        Panel.SetZIndex(line, 1);
-                    }
-                }
+                nodesVisualHelper.SelectLines(_nodesSelected);
+                
+            }
+        }
+
+        public void CreateEventHandlers(Canvas mainCanvas)
+        {
+            foreach (var nodeWithVisuals in _nodesWithVisuals)
+            {
+                Border nodeVisual =  new VisualsFactory().CreateNode(nodeWithVisuals.Value.X, nodeWithVisuals.Value.Y, mainCanvas, nodeWithVisuals.Value, NodeSelected);
+                nodeWithVisuals.Value.VisualRepresentation = nodeVisual;
             }
         }
     }
